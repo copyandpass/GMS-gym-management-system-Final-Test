@@ -8,42 +8,66 @@ import java.util.ArrayList;
  * 기구 추가, 삭제, 상태 조회 기능을 제공합니다.
  */
 public class GymEquipmentGUI extends JFrame {
-    // 기구 데이터를 저장하는 ArrayList
     private ArrayList<Equipment> equipmentList = new ArrayList<>();
-    // 기구 목록을 표시하는 리스트 모델
     private DefaultListModel<String> equipmentListModel = new DefaultListModel<>();
 
     /**
      * GymEquipmentGUI 생성자는 GUI를 초기화하고 이벤트를 설정합니다.
-     * 기구 관리 기능을 수행하기 위한 각 버튼과 화면 구성을 정의합니다.
      */
     public GymEquipmentGUI() {
-        // GUI의 기본 설정
-        setTitle("체육관 기구 관리 시스템");
-        setSize(400, 300);
+        // FlatLaf 테마 적용 (FlatLightLaf 사용)
+        try {
+            UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
+        setTitle("체육관 기구 관리 시스템 🏋️‍♂️");
+        setSize(500, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
 
-        // 메인 패널 생성
+        // 상단 헤더 패널
+        JLabel headerLabel = new JLabel("체육관 기구 관리 시스템", JLabel.CENTER);
+        headerLabel.setFont(new Font("맑은 고딕", Font.BOLD, 20));
+        headerLabel.setOpaque(true);
+        headerLabel.setBackground(new Color(72, 128, 255));
+        headerLabel.setForeground(Color.WHITE);
+        headerLabel.setPreferredSize(new Dimension(getWidth(), 50));
+        add(headerLabel, BorderLayout.NORTH);
+
+        // 메인 패널
         JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // 기구 목록을 표시하는 리스트 구성
+        // 기구 목록
         JList<String> equipmentListView = new JList<>(equipmentListModel);
+        equipmentListView.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(equipmentListView);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("기구 목록"));
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // 버튼 패널 생성 및 구성
-        JPanel buttonPanel = new JPanel(new FlowLayout());
-        JButton addButton = new JButton("기구 추가");
-        JButton deleteButton = new JButton("기구 삭제");
-        JButton viewStatusButton = new JButton("기구 상태 조회");
+        // 버튼 패널
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        JButton addButton = new JButton("➕ 기구 추가");
+        JButton deleteButton = new JButton("❌ 기구 삭제");
+        JButton viewStatusButton = new JButton("📋 상태 조회");
+
+        // 버튼 스타일 적용
+        for (JButton button : new JButton[]{addButton, deleteButton, viewStatusButton}) {
+            button.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+            button.setBackground(new Color(72, 128, 255));
+            button.setForeground(Color.WHITE);
+            button.setFocusPainted(false);
+            button.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        }
 
         buttonPanel.add(addButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(viewStatusButton);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        add(mainPanel);
+        add(mainPanel, BorderLayout.CENTER);
 
         // 이벤트 처리
         addButton.addActionListener(e -> addEquipment());
@@ -52,8 +76,7 @@ public class GymEquipmentGUI extends JFrame {
     }
 
     /**
-     * addEquipment 메서드는 새로운 기구를 추가하기 위한 대화 상자를 표시하고,
-     * 입력된 정보를 ArrayList에 추가합니다.
+     * addEquipment 메서드는 새로운 기구를 추가합니다.
      */
     private void addEquipment() {
         JTextField nameField = new JTextField();
@@ -83,8 +106,7 @@ public class GymEquipmentGUI extends JFrame {
     }
 
     /**
-     * deleteEquipment 메서드는 특정 기구를 삭제하기 위한 대화 상자를 표시하고,
-     * 입력된 이름을 기준으로 ArrayList에서 해당 기구를 삭제합니다.
+     * deleteEquipment 메서드는 특정 기구를 삭제합니다.
      */
     private void deleteEquipment() {
         String name = JOptionPane.showInputDialog(this, "삭제할 기구 이름을 입력하세요:");
@@ -103,7 +125,7 @@ public class GymEquipmentGUI extends JFrame {
     }
 
     /**
-     * viewEquipmentStatus 메서드는 등록된 기구의 상태를 대화 상자로 표시합니다.
+     * viewEquipmentStatus 메서드는 기구 상태를 조회합니다.
      */
     private void viewEquipmentStatus() {
         if (equipmentList.isEmpty()) {
@@ -123,8 +145,7 @@ public class GymEquipmentGUI extends JFrame {
     }
 
     /**
-     * main 메서드는 프로그램의 진입점으로, GymEquipmentGUI 인스턴스를 생성하고 실행합니다.
-     * @param args 명령행 인수 (현재 사용되지 않음)
+     * main 메서드는 프로그램을 실행합니다.
      */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -135,46 +156,27 @@ public class GymEquipmentGUI extends JFrame {
 }
 
 /**
- * Equipment 클래스는 체육관 기구의 정보를 저장하는 데이터 모델입니다.
- * 기구 이름, 수량, 상태를 포함합니다.
+ * Equipment 클래스는 체육관 기구의 정보를 저장합니다.
  */
 class Equipment {
     private String name;
     private int quantity;
     private String status;
 
-    /**
-     * Equipment 생성자는 기구의 이름, 수량, 상태를 초기화합니다.
-     * @param name 기구 이름
-     * @param quantity 기구 수량
-     * @param status 기구 상태
-     */
     public Equipment(String name, int quantity, String status) {
         this.name = name;
         this.quantity = quantity;
         this.status = status;
     }
 
-    /**
-     * getName 메서드는 기구의 이름을 반환합니다.
-     * @return 기구 이름
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * getQuantity 메서드는 기구의 수량을 반환합니다.
-     * @return 기구 수량
-     */
     public int getQuantity() {
         return quantity;
     }
 
-    /**
-     * getStatus 메서드는 기구의 상태를 반환합니다.
-     * @return 기구 상태
-     */
     public String getStatus() {
         return status;
     }
