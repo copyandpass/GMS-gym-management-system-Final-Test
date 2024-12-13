@@ -1,14 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * GymEquipmentGUI 클래스는 체육관 기구를 관리하기 위한 GUI 프로그램입니다.
  * 기구 추가, 삭제, 상태 조회 기능을 제공합니다.
  */
 public class GymEquipmentGUI extends JFrame {
-    private ArrayList<Equipment> equipmentList = new ArrayList<>();
+    private HashMap<String, Equipment> equipmentMap = new HashMap<>();
     private DefaultListModel<String> equipmentListModel = new DefaultListModel<>();
 
     /**
@@ -96,8 +96,9 @@ public class GymEquipmentGUI extends JFrame {
                 int quantity = Integer.parseInt(quantityField.getText());
                 String status = statusField.getText();
 
-                equipmentList.add(new Equipment(name, quantity, status));
-                equipmentListModel.addElement(name + " (" + quantity + "개, 상태: " + status + ")");
+                Equipment newEquipment = new Equipment(name, quantity, status);
+                equipmentMap.put(name, newEquipment);
+                updateEquipmentListModel();
                 JOptionPane.showMessageDialog(this, "기구가 추가되었습니다.");
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "수량은 숫자로 입력해야 합니다.", "입력 오류", JOptionPane.ERROR_MESSAGE);
@@ -111,12 +112,9 @@ public class GymEquipmentGUI extends JFrame {
     private void deleteEquipment() {
         String name = JOptionPane.showInputDialog(this, "삭제할 기구 이름을 입력하세요:");
         if (name != null && !name.isEmpty()) {
-            boolean removed = equipmentList.removeIf(equipment -> equipment.getName().equals(name));
-            if (removed) {
-                equipmentListModel.clear();
-                for (Equipment equipment : equipmentList) {
-                    equipmentListModel.addElement(equipment.getName() + " (" + equipment.getQuantity() + "개, 상태: " + equipment.getStatus() + ")");
-                }
+            if (equipmentMap.containsKey(name)) {
+                equipmentMap.remove(name);
+                updateEquipmentListModel();
                 JOptionPane.showMessageDialog(this, "기구가 삭제되었습니다.");
             } else {
                 JOptionPane.showMessageDialog(this, "해당 이름의 기구를 찾을 수 없습니다.");
@@ -128,11 +126,11 @@ public class GymEquipmentGUI extends JFrame {
      * viewEquipmentStatus 메서드는 기구 상태를 조회합니다.
      */
     private void viewEquipmentStatus() {
-        if (equipmentList.isEmpty()) {
+        if (equipmentMap.isEmpty()) {
             JOptionPane.showMessageDialog(this, "등록된 기구가 없습니다.");
         } else {
             StringBuilder sb = new StringBuilder();
-            for (Equipment equipment : equipmentList) {
+            for (Equipment equipment : equipmentMap.values()) {
                 sb.append(equipment.getName())
                         .append(" - 수량: ")
                         .append(equipment.getQuantity())
@@ -141,6 +139,16 @@ public class GymEquipmentGUI extends JFrame {
                         .append("\n");
             }
             JOptionPane.showMessageDialog(this, sb.toString(), "기구 상태", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    /**
+     * updateEquipmentListModel 메서드는 JList 모델을 갱신합니다.
+     */
+    private void updateEquipmentListModel() {
+        equipmentListModel.clear();
+        for (Equipment equipment : equipmentMap.values()) {
+            equipmentListModel.addElement(equipment.getName() + " (" + equipment.getQuantity() + "개, 상태: " + equipment.getStatus() + ")");
         }
     }
 
