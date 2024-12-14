@@ -2,8 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 공지사항 관리 시스템을 위한 GUI 클래스입니다.
@@ -13,16 +12,16 @@ public class NoticeManagementSystemGUI {
     private JFrame frame;
     private JTextArea textArea;
     private JTextField textFieldTitle;
-    private List<Notice> noticeList;
-    private NoticeDAO noticeDAO;
+    private Map<Integer, Notice> noticeMap;
+    private int currentId;
 
     /**
      * 프로그램을 초기화합니다.
-     * GUI 구성 요소를 설정하고 공지사항 목록을 로드합니다.
+     * GUI 구성 요소를 설정하고 공지사항 목록을 초기화합니다.
      */
     public NoticeManagementSystemGUI() {
-        noticeDAO = new NoticeDAO();
-        noticeList = noticeDAO.getAllNotices();
+        noticeMap = new HashMap<>();
+        currentId = 1; // 공지사항 ID 초기값
         initialize();
     }
 
@@ -80,9 +79,9 @@ public class NoticeManagementSystemGUI {
     private void addNotice() {
         String title = textFieldTitle.getText();
         if (!title.isEmpty()) {
-            Notice notice = new Notice(title);
-            noticeDAO.addNotice(notice);
-            noticeList.add(notice);
+            Notice notice = new Notice(currentId, title);
+            noticeMap.put(currentId, notice);
+            currentId++;
             loadNotices();
         } else {
             JOptionPane.showMessageDialog(frame, "제목을 입력하세요.");
@@ -94,14 +93,18 @@ public class NoticeManagementSystemGUI {
      */
     private void editNotice() {
         String title = textFieldTitle.getText();
-        int selectedIndex = textArea.getCaretPosition();
-        if (selectedIndex >= 0 && selectedIndex < noticeList.size()) {
-            Notice notice = noticeList.get(selectedIndex);
-            notice.setTitle(title);
-            noticeDAO.updateNotice(notice);
-            loadNotices();
-        } else {
-            JOptionPane.showMessageDialog(frame, "수정할 공지사항을 선택하세요.");
+        String inputId = JOptionPane.showInputDialog(frame, "수정할 공지사항 ID를 입력하세요:");
+        try {
+            int id = Integer.parseInt(inputId);
+            if (noticeMap.containsKey(id)) {
+                Notice notice = noticeMap.get(id);
+                notice.setTitle(title);
+                loadNotices();
+            } else {
+                JOptionPane.showMessageDialog(frame, "해당 ID의 공지사항이 없습니다.");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "유효한 숫자를 입력하세요.");
         }
     }
 
@@ -109,14 +112,17 @@ public class NoticeManagementSystemGUI {
      * 공지사항을 삭제합니다.
      */
     private void deleteNotice() {
-        int selectedIndex = textArea.getCaretPosition();
-        if (selectedIndex >= 0 && selectedIndex < noticeList.size()) {
-            Notice notice = noticeList.get(selectedIndex);
-            noticeDAO.deleteNotice(notice);
-            noticeList.remove(selectedIndex);
-            loadNotices();
-        } else {
-            JOptionPane.showMessageDialog(frame, "삭제할 공지사항을 선택하세요.");
+        String inputId = JOptionPane.showInputDialog(frame, "삭제할 공지사항 ID를 입력하세요:");
+        try {
+            int id = Integer.parseInt(inputId);
+            if (noticeMap.containsKey(id)) {
+                noticeMap.remove(id);
+                loadNotices();
+            } else {
+                JOptionPane.showMessageDialog(frame, "해당 ID의 공지사항이 없습니다.");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "유효한 숫자를 입력하세요.");
         }
     }
 
@@ -125,8 +131,8 @@ public class NoticeManagementSystemGUI {
      */
     private void loadNotices() {
         textArea.setText("");
-        for (Notice notice : noticeList) {
-            textArea.append(notice.getTitle() + "\n");
+        for (Notice notice : noticeMap.values()) {
+            textArea.append("ID: " + notice.getId() + " | 제목: " + notice.getTitle() + "\n");
         }
     }
 
@@ -144,5 +150,30 @@ public class NoticeManagementSystemGUI {
                 }
             }
         });
+    }
+}
+
+/**
+ * 공지사항 객체를 나타내는 클래스입니다.
+ */
+class Notice {
+    private int id;
+    private String title;
+
+    public Notice(int id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
