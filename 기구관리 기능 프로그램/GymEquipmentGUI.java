@@ -106,6 +106,7 @@ public class GymEquipmentGUI extends JFrame {
         }
     }
 
+        
     /**
      * deleteEquipment 메서드는 특정 기구를 삭제합니다.
      */
