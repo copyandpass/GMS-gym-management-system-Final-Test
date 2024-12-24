@@ -4,10 +4,25 @@ import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 체육관 관리 시스템의 GUI를 구현한 클래스입니다.
+ * 이 프로그램은 체육관의 공지사항, 회원, 기구를 관리하는 기능을 제공합니다.
+ * 
+ * <p>프로그램은 3개의 주요 탭을 가지고 있습니다:
+ * <ul>
+ * <li>공지사항 관리: 공지사항을 추가, 수정, 삭제할 수 있습니다.</li>
+ * <li>회원 관리: 회원을 추가, 삭제하고 목록을 조회할 수 있습니다.</li>
+ * <li>기구 관리: 기구를 추가, 삭제하고 상태를 조회할 수 있습니다.</li>
+ * </ul>
+ */
 public class GymManagementSystemGUI extends JFrame {
 
     private JTabbedPane tabbedPane; // 탭을 관리하는 컴포넌트
 
+    /**
+     * GymManagementSystemGUI 클래스의 생성자입니다.
+     * 이 생성자는 기본 GUI를 설정하고, 각 탭을 초기화하여 프레임에 추가합니다.
+     */
     public GymManagementSystemGUI() {
         setTitle("체육관 관리 시스템");
         setSize(800, 600);
@@ -24,6 +39,10 @@ public class GymManagementSystemGUI extends JFrame {
         add(tabbedPane);
     }
 
+    /**
+     * 메인 메서드입니다.
+     * 이 메서드는 프로그램을 실행시키는 역할을 합니다.
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             GymManagementSystemGUI gui = new GymManagementSystemGUI();
@@ -32,12 +51,20 @@ public class GymManagementSystemGUI extends JFrame {
     }
 
     // 공지사항 관리 패널
+    /**
+     * 공지사항을 추가, 수정, 삭제하는 패널입니다.
+     * 공지사항을 리스트 형태로 관리하고, 사용자가 공지사항을 추가하거나 수정, 삭제할 수 있습니다.
+     */
     class NoticeManagementPanel extends JPanel {
         private JTextArea textArea;
         private JTextField textFieldTitle;
         private Map<Integer, Notice> noticeMap;
         private int currentId;
 
+        /**
+         * NoticeManagementPanel의 생성자입니다.
+         * 이 생성자는 공지사항 관리 기능을 위한 UI 요소들을 설정합니다.
+         */
         public NoticeManagementPanel() {
             setLayout(new BorderLayout());
 
@@ -69,6 +96,10 @@ public class GymManagementSystemGUI extends JFrame {
             loadNotices();
         }
 
+        /**
+         * 새로운 공지사항을 추가하는 메서드입니다.
+         * 사용자가 입력한 제목을 기반으로 새로운 공지사항을 추가합니다.
+         */
         private void addNotice() {
             String title = textFieldTitle.getText();
             if (!title.isEmpty()) {
@@ -81,6 +112,10 @@ public class GymManagementSystemGUI extends JFrame {
             }
         }
 
+        /**
+         * 공지사항을 수정하는 메서드입니다.
+         * 사용자가 입력한 ID를 바탕으로 수정할 공지사항을 찾아 제목을 수정합니다.
+         */
         private void editNotice() {
             String title = textFieldTitle.getText();
             String inputId = JOptionPane.showInputDialog(this, "수정할 공지사항 ID를 입력하세요:");
@@ -98,6 +133,10 @@ public class GymManagementSystemGUI extends JFrame {
             }
         }
 
+        /**
+         * 공지사항을 삭제하는 메서드입니다.
+         * 사용자가 입력한 ID를 바탕으로 공지사항을 삭제합니다.
+         */
         private void deleteNotice() {
             String inputId = JOptionPane.showInputDialog(this, "삭제할 공지사항 ID를 입력하세요:");
             try {
@@ -113,6 +152,10 @@ public class GymManagementSystemGUI extends JFrame {
             }
         }
 
+        /**
+         * 공지사항 목록을 화면에 로드하는 메서드입니다.
+         * 현재 저장된 모든 공지사항을 텍스트 영역에 표시합니다.
+         */
         private void loadNotices() {
             textArea.setText("");
             for (Notice notice : noticeMap.values()) {
@@ -122,10 +165,18 @@ public class GymManagementSystemGUI extends JFrame {
     }
 
     // 회원 관리 패널
+    /**
+     * 체육관 회원을 추가, 삭제 및 목록을 조회하는 패널입니다.
+     * 회원의 이름, 나이, 회원권 종류를 관리합니다.
+     */
     class GymMembershipPanel extends JPanel {
         private GymMembershipManager manager;
         private DefaultListModel<String> memberListModel;
 
+        /**
+         * GymMembershipPanel의 생성자입니다.
+         * 이 생성자는 회원 관리 기능을 위한 UI 요소들을 설정합니다.
+         */
         public GymMembershipPanel() {
             manager = new GymMembershipManager();
             memberListModel = new DefaultListModel<>();
@@ -152,6 +203,10 @@ public class GymManagementSystemGUI extends JFrame {
             listButton.addActionListener(e -> listMembers());
         }
 
+        /**
+         * 새로운 회원을 추가하는 메서드입니다.
+         * 사용자가 입력한 정보를 바탕으로 새로운 회원을 추가합니다.
+         */
         private void addMember() {
             JTextField nameField = new JTextField();
             JTextField ageField = new JTextField();
@@ -182,6 +237,10 @@ public class GymManagementSystemGUI extends JFrame {
             }
         }
 
+        /**
+         * 회원을 삭제하는 메서드입니다.
+         * 사용자가 입력한 이름을 바탕으로 회원을 삭제합니다.
+         */
         private void deleteMember() {
             String name = JOptionPane.showInputDialog(this, "삭제할 회원의 이름을 입력하세요:");
             if (name != null && !name.isEmpty()) {
@@ -194,11 +253,18 @@ public class GymManagementSystemGUI extends JFrame {
             }
         }
 
+        /**
+         * 등록된 모든 회원을 목록으로 조회하는 메서드입니다.
+         */
         private void listMembers() {
             String members = manager.listMembers();
             JOptionPane.showMessageDialog(this, members, "회원 목록", JOptionPane.INFORMATION_MESSAGE);
         }
 
+        /**
+         * 회원 목록을 화면에 업데이트하는 메서드입니다.
+         * 현재 저장된 모든 회원을 목록에 표시합니다.
+         */
         private void updateMemberList() {
             memberListModel.clear();
             for (Member member : manager.getAllMembers().values()) {
@@ -208,10 +274,18 @@ public class GymManagementSystemGUI extends JFrame {
     }
 
     // 기구 관리 패널
+    /**
+     * 체육관의 기구를 추가, 삭제 및 상태를 조회하는 패널입니다.
+     * 기구의 이름, 수량, 상태를 관리합니다.
+     */
     class GymEquipmentPanel extends JPanel {
         private HashMap<String, Equipment> equipmentMap = new HashMap<>();
         private DefaultListModel<String> equipmentListModel = new DefaultListModel<>();
 
+        /**
+         * GymEquipmentPanel의 생성자입니다.
+         * 이 생성자는 기구 관리 기능을 위한 UI 요소들을 설정합니다.
+         */
         public GymEquipmentPanel() {
             setLayout(new BorderLayout());
 
@@ -235,6 +309,10 @@ public class GymManagementSystemGUI extends JFrame {
             viewStatusButton.addActionListener(e -> viewEquipmentStatus());
         }
 
+        /**
+         * 새로운 기구를 추가하는 메서드입니다.
+         * 사용자가 입력한 정보를 바탕으로 기구를 추가합니다.
+         */
         private void addEquipment() {
             JTextField nameField = new JTextField();
             JTextField quantityField = new JTextField();
@@ -263,6 +341,10 @@ public class GymManagementSystemGUI extends JFrame {
             }
         }
 
+        /**
+         * 기구를 삭제하는 메서드입니다.
+         * 사용자가 입력한 이름을 바탕으로 기구를 삭제합니다.
+         */
         private void deleteEquipment() {
             String name = JOptionPane.showInputDialog(this, "삭제할 기구 이름을 입력하세요:");
             if (name != null && !name.isEmpty()) {
@@ -276,6 +358,10 @@ public class GymManagementSystemGUI extends JFrame {
             }
         }
 
+        /**
+         * 기구의 상태를 조회하는 메서드입니다.
+         * 등록된 모든 기구의 상태와 수량을 보여줍니다.
+         */
         private void viewEquipmentStatus() {
             if (equipmentMap.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "등록된 기구가 없습니다.");
@@ -293,6 +379,10 @@ public class GymManagementSystemGUI extends JFrame {
             }
         }
 
+        /**
+         * 기구 목록을 화면에 업데이트하는 메서드입니다.
+         * 현재 저장된 모든 기구를 목록에 표시합니다.
+         */
         private void updateEquipmentListModel() {
             equipmentListModel.clear();
             for (Equipment equipment : equipmentMap.values()) {
@@ -302,10 +392,19 @@ public class GymManagementSystemGUI extends JFrame {
     }
 
     // 공지사항 데이터 모델
+    /**
+     * 공지사항을 나타내는 데이터 모델입니다.
+     * 각 공지사항은 ID와 제목을 가지고 있습니다.
+     */
     class Notice {
         private int id;
         private String title;
 
+        /**
+         * Notice 클래스의 생성자입니다.
+         * @param id 공지사항의 ID
+         * @param title 공지사항의 제목
+         */
         public Notice(int id, String title) {
             this.id = id;
             this.title = title;
@@ -325,11 +424,21 @@ public class GymManagementSystemGUI extends JFrame {
     }
 
     // 체육관 회원 데이터 모델
+    /**
+     * 체육관 회원을 나타내는 데이터 모델입니다.
+     * 회원은 이름, 나이, 회원권 종류를 가집니다.
+     */
     class Member {
         private String name;
         private int age;
         private String membershipType;
 
+        /**
+         * Member 클래스의 생성자입니다.
+         * @param name 회원의 이름
+         * @param age 회원의 나이
+         * @param membershipType 회원의 회원권 종류
+         */
         public Member(String name, int age, String membershipType) {
             this.name = name;
             this.age = age;
@@ -350,11 +459,21 @@ public class GymManagementSystemGUI extends JFrame {
     }
 
     // 기구 데이터 모델
+    /**
+     * 체육관 기구를 나타내는 데이터 모델입니다.
+     * 기구는 이름, 수량, 상태를 가집니다.
+     */
     class Equipment {
         private String name;
         private int quantity;
         private String status;
 
+        /**
+         * Equipment 클래스의 생성자입니다.
+         * @param name 기구의 이름
+         * @param quantity 기구의 수량
+         * @param status 기구의 상태
+         */
         public Equipment(String name, int quantity, String status) {
             this.name = name;
             this.quantity = quantity;
@@ -375,9 +494,20 @@ public class GymManagementSystemGUI extends JFrame {
     }
 
     // 체육관 회원 관리
+    /**
+     * 체육관의 회원을 관리하는 클래스입니다.
+     * 회원을 추가, 삭제하고, 목록을 조회할 수 있습니다.
+     */
     class GymMembershipManager {
         private HashMap<String, Member> members = new HashMap<>();
 
+        /**
+         * 새로운 회원을 추가하는 메서드입니다.
+         * @param name 회원의 이름
+         * @param age 회원의 나이
+         * @param membershipType 회원의 회원권 종류
+         * @return 이미 등록된 회원이 아닌 경우 true, 그렇지 않으면 false
+         */
         public boolean addMember(String name, int age, String membershipType) {
             if (members.containsKey(name)) {
                 return false;
@@ -386,10 +516,19 @@ public class GymManagementSystemGUI extends JFrame {
             return true;
         }
 
+        /**
+         * 회원을 삭제하는 메서드입니다.
+         * @param name 삭제할 회원의 이름
+         * @return 삭제된 회원이 있으면 true, 없으면 false
+         */
         public boolean deleteMember(String name) {
             return members.remove(name) != null;
         }
 
+        /**
+         * 모든 회원의 목록을 조회하는 메서드입니다.
+         * @return 등록된 회원들의 목록을 문자열로 반환
+         */
         public String listMembers() {
             if (members.isEmpty()) {
                 return "등록된 회원이 없습니다.";
@@ -407,6 +546,10 @@ public class GymManagementSystemGUI extends JFrame {
             return sb.toString();
         }
 
+        /**
+         * 모든 회원을 반환하는 메서드입니다.
+         * @return 회원 목록을 반환
+         */
         public HashMap<String, Member> getAllMembers() {
             return members;
         }
