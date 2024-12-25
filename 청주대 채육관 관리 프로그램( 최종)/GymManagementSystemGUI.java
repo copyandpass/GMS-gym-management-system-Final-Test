@@ -574,3 +574,6 @@ public class GymManagementSystemGUI extends JFrame {
         }
     }
 }
+
+
+//마무리-- 2021011932 이진혁 자바프로그래밍 기말고사 프로그래밍 마침니다! 감사합니다.
