@@ -5,23 +5,36 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 체육관 관리 시스템의 GUI를 구현한 클래스입니다.
+ ** 2021011932 이진혁 기말고사 프로그램입니다.
+ * 청주대학교  체육관 관리 시스템의 GUI를 구현한 클래스입니다.
  * 이 프로그램은 체육관의 공지사항, 회원, 기구를 관리하는 기능을 제공합니다.
+ * <p>문서 작성이니 최대한 두서없이 기능들에 대한 설명만 넣어 놓은점 양해 부탁드리겠습니다.
+ * 이번 자바 프로그래밍을 들으면서 저의 진로에 조금더 애정이 붙었습니다. 감사합니다.
+ *  이번학기 고생많으셨습니다.
  * 
- * <p>프로그램은 3개의 주요 탭을 가지고 있습니다:
+ * <p> 제가 준비한 프로그램은 3개의 주요 탭을 가지고 있습니다:
  * <ul>
  * <li>공지사항 관리: 공지사항을 추가, 수정, 삭제할 수 있습니다.</li>
  * <li>회원 관리: 회원을 추가, 삭제하고 목록을 조회할 수 있습니다.</li>
  * <li>기구 관리: 기구를 추가, 삭제하고 상태를 조회할 수 있습니다.</li>
+ * <li>--------------------------------------------------------------------------
+ * <li>시작하기에 앞서 컬렉션 프레임워크 기능이 들어간 메소드들을 먼저 설명하고 가겠습니다.
+ * <li>공지사항 관리: HashMap으로 ID를 기준으로 효율적으로 공지사항을 관리.
+ * <li>회원 관리: HashMap을 사용해 회원 이름을 키로 하여 데이터를 효율적으로 추가, 삭제, 검색.
+ * <li>기구 관리: HashMap으로 기구 이름과 관련 데이터를 효율적으로 관리.
+ * <li>UI 데이터 표시: DefaultListModel을 사용해 회원 및 기구 데이터를 리스트 형태로 UI에 연동.
  * </ul>
  */
 public class GymManagementSystemGUI extends JFrame {
 
     private JTabbedPane tabbedPane; // 탭을 관리하는 컴포넌트
 
+    
+    
+    
     /**
-     * GymManagementSystemGUI 클래스의 생성자입니다.
-     * 이 생성자는 기본 GUI를 설정하고, 각 탭을 초기화하여 프레임에 추가합니다.
+     * 먼저 GymManagementSystemGUI 클래스의 생성자입니다.
+     * 이 생성자로 기본 GUI를 설정하고, 각 탭을 초기화하여 프레임에 추가했습니다.
      */
     public GymManagementSystemGUI() {
         setTitle("체육관 관리 시스템");
@@ -40,7 +53,7 @@ public class GymManagementSystemGUI extends JFrame {
     }
 
     /**
-     * 메인 메서드입니다.
+     * 다음으로는 메인 메서드입니다.
      * 이 메서드는 프로그램을 실행시키는 역할을 합니다.
      */
     public static void main(String[] args) {
@@ -52,8 +65,11 @@ public class GymManagementSystemGUI extends JFrame {
 
     // 공지사항 관리 패널
     /**
-     * 공지사항을 추가, 수정, 삭제하는 패널입니다.
-     * 공지사항을 리스트 형태로 관리하고, 사용자가 공지사항을 추가하거나 수정, 삭제할 수 있습니다.
+     * 2번째 기능인 공지사항을 추가, 수정, 삭제하는 패널입니다.
+     **공지사항을 리스트 형태로 관리하고, 프로그램 사용자가 공지사항을 추가하거나 수정, 삭제할 수 있습니다.
+     *
+     * <li>앞으로 청주대학교 관리자가 사용할 기능이라 권한부여가필요합니다. (구현못한기능)
+     
      */
     class NoticeManagementPanel extends JPanel {
         private JTextArea textArea;
@@ -63,7 +79,8 @@ public class GymManagementSystemGUI extends JFrame {
 
         /**
          * NoticeManagementPanel의 생성자입니다.
-         * 이 생성자는 공지사항 관리 기능을 위한 UI 요소들을 설정합니다.
+         * 이 생성자는 체육관 프로그램에서 공지사항 관리 기능을 위한 UI 요소들을 설정합니다.
+         *  <li> ex) 추가, 삭제, 수정
          */
         public NoticeManagementPanel() {
             setLayout(new BorderLayout());
@@ -115,6 +132,7 @@ public class GymManagementSystemGUI extends JFrame {
         /**
          * 공지사항을 수정하는 메서드입니다.
          * 사용자가 입력한 ID를 바탕으로 수정할 공지사항을 찾아 제목을 수정합니다.
+         * <li>아직 권한부여 기능이 없기에 ID로 권한을 대신했습니다.
          */
         private void editNotice() {
             String title = textFieldTitle.getText();
@@ -135,7 +153,7 @@ public class GymManagementSystemGUI extends JFrame {
 
         /**
          * 공지사항을 삭제하는 메서드입니다.
-         * 사용자가 입력한 ID를 바탕으로 공지사항을 삭제합니다.
+         * 사용자가 입력한 ID(권한)를 바탕으로 공지사항을 삭제합니다.
          */
         private void deleteNotice() {
             String inputId = JOptionPane.showInputDialog(this, "삭제할 공지사항 ID를 입력하세요:");
@@ -153,7 +171,7 @@ public class GymManagementSystemGUI extends JFrame {
         }
 
         /**
-         * 공지사항 목록을 화면에 로드하는 메서드입니다.
+         * 공지사항 목록을 화면에 가져오는 메서드입니다.
          * 현재 저장된 모든 공지사항을 텍스트 영역에 표시합니다.
          */
         private void loadNotices() {
@@ -240,6 +258,7 @@ public class GymManagementSystemGUI extends JFrame {
         /**
          * 회원을 삭제하는 메서드입니다.
          * 사용자가 입력한 이름을 바탕으로 회원을 삭제합니다.
+         * 컬렉션 프레임워크 기능이 들어가있습니다.
          */
         private void deleteMember() {
             String name = JOptionPane.showInputDialog(this, "삭제할 회원의 이름을 입력하세요:");
